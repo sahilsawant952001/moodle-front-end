@@ -1,0 +1,38 @@
+.my-component {
+    background: #fff;
+}
+  
+.fullscreen-enabled .my-component {
+    background: #000;
+}
+
+.circle {
+    width: 1%;
+    height: 1%;
+    line-height: 1%;
+    border-radius: 50%;
+    font-size: 50px;
+    color: #fff;
+    text-align: center;
+    background: #000
+  }
+
+  .QuizStart h1{
+    margin: 3% 0;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 60px;
+    color: #52616B;
+    text-shadow: 2px 2px #A1EAFB;
+  }
+
+  .summary p{
+    margin: 2% auto;
+  }
+
+  .summary button{
+    margin: 2% auto;
+  }
+
+  .btns{
+    margin: 3% 0;
+  }

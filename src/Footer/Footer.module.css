@@ -1,0 +1,16 @@
+.footer{
+    padding: 1% 0;
+    margin: 0;
+    text-align: center;
+    color: #ffffff;
+    background-color: #393e46;
+}
+
+.footer a{
+    text-decoration: none;
+    color: white;
+}
+
+.footer i{
+    margin: 2% 2%;
+}

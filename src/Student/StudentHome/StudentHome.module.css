@@ -1,0 +1,14 @@
+.StudentHome{
+    margin: 3% 0;
+}
+
+.StudentHome h1{
+    font-family: 'Bebas Neue', cursive;
+    font-size: 40px;
+    color: #52616B;
+    text-shadow: 2px 2px #A1EAFB;
+}
+
+.StudentHome h4{
+    font-weight: bolder;
+}

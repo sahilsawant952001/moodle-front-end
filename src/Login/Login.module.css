@@ -1,0 +1,22 @@
+.Login{
+    padding: 5%;
+}
+
+.Login h1{
+    font-family: 'Bebas Neue', cursive;
+    font-size: 70px;
+    color:silver;
+    text-shadow: 2px 2px #222831;
+}
+
+.Login h5{
+    margin: 5% auto;
+}
+
+.Login Link{
+    margin: 2% 0;
+}
+
+.Login img {
+    border-radius: 50%;
+  }
