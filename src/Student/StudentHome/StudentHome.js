@@ -1,20 +1,25 @@
 import classes from '../StudentHome/StudentHome.module.css';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from '../../Store/Auth';
+import Spinner from '../../Spinner/Spinner';
 
 function StudentHome() {
+
+    const dispatch = useDispatch();
+
+    const loading = useSelector(state => state.auth.loading);
 
     const deptname = useSelector(state => state.auth.deptname);
 
     const dept = useSelector(state => state.auth.dept);
 
-    const [error, seterror] = useState(null);
-
     const [teacherData, setteacherData] = useState([]);
 
     useEffect(() => {
         async function Call(){
+            dispatch(authActions.setLoading());
             const url = 'http://localhost:4000/GetTeachers';
             fetch(url,{
                 method:'POST',
@@ -29,9 +34,11 @@ function StudentHome() {
                 return res.json();
             })
             .then( data => {
+                dispatch(authActions.setLoading());
                 setteacherData(data);
             })
             .catch( err => {
+                dispatch(authActions.setLoading());
                 alert('SOME ERROR OCCURED!')
             })
         }
@@ -56,16 +63,14 @@ function StudentHome() {
         })
     }
     
-    return (
-        <div className={classes.StudentHome}>
-            <h1>WELCOME TO {deptname} DEPARTMENT</h1>
-            <br/><br/>
-            <h4>TEACHERS</h4>
-            <ul className="list-group" style={{width:"50%",margin:"5% auto"}}>
-                {data}
-            </ul>
-        </div>
-    )
+    return loading ? <Spinner/> : <div className={classes.StudentHome}>
+    <h1>WELCOME TO {deptname} DEPARTMENT</h1>
+    <br/><br/>
+    <h4>TEACHERS</h4>
+    <ul className="list-group" style={{width:"50%",margin:"5% auto"}}>
+        {data}
+    </ul>
+</div>
 }
 
 

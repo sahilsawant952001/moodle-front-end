@@ -8,12 +8,10 @@ function MaterialView() {
 
     const { filename,fileurl } = location.state;
 
-    console.log(fileurl)
-
     return (
         <div className={classes.MaterialView}>
             <h1>{filename.toUpperCase()}</h1>
-            <iframe src={fileurl} width="840" height="680"></iframe>
+            <iframe title='Material' src={fileurl} width="840" height="680"></iframe>
         </div>
     )
 }

@@ -101,7 +101,8 @@ function TeacherLogin() {
                     surname:data.surname,
                     userType:'Teacher',
                     dept:data.dept,
-                    deptname:data.deptname
+                    deptname:data.deptname,
+                    email:data.email
                 }));
                 const url2 = '/Teacher/'+data.dept+'/'+data.id;
                 history.push(url2);
@@ -117,10 +118,10 @@ function TeacherLogin() {
     return (
         loading === true ? <Spinner/> : <div className={classes.TeacherLogin}>
         <h1>{isSignIn?'TEACHER SIGN IN':'TEACHER SIGN UP'}</h1>
-        <form onSubmit={formSubmitHandler}>
-            <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
-                {error!==null ? <h2>{error}</h2>:null}
-                <div className="card-body">
+        <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
+            <div className="card-body">
+                <form onSubmit={formSubmitHandler}>
+                    {error!==null ? <h2>{error}</h2>:null}
                     {!isSignIn?<div className="form-group">
                         <input value={name} onChange={nameHandler} required type="text" className="form-control" id="formGroupExampleInput1" placeholder="Enter Name"/>
                     </div>:null}
@@ -149,12 +150,12 @@ function TeacherLogin() {
                     <div className="form-group">
                         <button id={classes.submitbtn}  className="btn btn-dark btn-block">{!isSignIn?"SIGN UP":"SIGN IN"}</button>
                     </div>
-                    <div className="form-group">
-                        <button id={classes.submitbtn} className="btn btn-outline-dark btn-block" onClick={ () => setisSignIn(!isSignIn) } >{isSignIn?"Switch To Sign Up":"Switch To Sign In"}</button>
-                    </div>
+                </form>
+                <div className="form-group">
+                    <button style={{width:'100%',margin:'1% auto'}} id={classes.submitbtn} className="btn btn-outline-dark btn-block" onClick={ () => setisSignIn(!isSignIn) } >{isSignIn?"Switch To Sign Up":"Switch To Sign In"}</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
     )
 }

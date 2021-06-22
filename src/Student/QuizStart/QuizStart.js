@@ -4,6 +4,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
 import { authActions } from '../../Store/Auth';
 import { useDispatch, useSelector } from 'react-redux';
+import Spinner from '../../Spinner/Spinner';
 
 function MyTimer(props) {
     
@@ -52,6 +53,8 @@ function QuizStart() {
 
     const [inFullScreen, setinFullScreen] = useState(false);
 
+    const loading = useSelector(state => state.auth.loading);
+
     const style1 = {
         
     }
@@ -72,6 +75,7 @@ function QuizStart() {
             let answers = Answers;
             answers.pop();
             setinFullScreen(false);
+            dispatch(authActions.setLoading());
             fetch('http://localhost:4000/Student/Attempt',{
                 method:'POST',
                 body:JSON.stringify({
@@ -82,7 +86,8 @@ function QuizStart() {
                     quizID:param.quizID,
                     answers:answers,
                     marks:"NG",
-                    violatedRule:true
+                    violatedRule:true,
+                    maxMarks:quizInfo.maxMarks
                 }),
                 headers:{
                     'Content-Type':'application/json'
@@ -92,9 +97,11 @@ function QuizStart() {
                 return res.json();
             })
             .then(data => {
+                dispatch(authActions.setLoading());
                 alert(data.message);
             })
             .catch(err => {
+                dispatch(authActions.setLoading());
                 alert('SOMETHING WENT WRONG');
             })
         }
@@ -110,6 +117,7 @@ function QuizStart() {
         setinFullScreen(false);
         let answers = Answers;
         answers.pop();
+        dispatch(authActions.setLoading());
         fetch('http://localhost:4000/Student/Attempt',{
             method:'POST',
             body:JSON.stringify({
@@ -120,7 +128,8 @@ function QuizStart() {
                 quizID:param.quizID,
                 answers:answers,
                 marks:"NG",
-                violatedRule:false
+                violatedRule:false,
+                maxMarks:quizInfo.maxMarks
             }),
             headers:{
                 'Content-Type':'application/json'
@@ -130,9 +139,11 @@ function QuizStart() {
             return res.json();
         })
         .then(data => {
+            dispatch(authActions.setLoading());
             alert(data.message);
         })
         .catch(err => {
+            dispatch(authActions.setLoading());
             alert('SOMETHING WENT WRONG');
         })
     }
@@ -170,8 +181,6 @@ function QuizStart() {
         }
     } 
 
-    console.log(Answers);
-
     useEffect(() => {
         if(Answers[QIndex]==='-1'){
             var ele = document.getElementsByName("QuizQuestion");
@@ -202,9 +211,9 @@ function QuizStart() {
         }
     }
 
-    let quizData,btns2 = null;
+    let quizData = null;
 
-    function clearAns(event){
+    function clearAns(){
         let darr = Answers;
         darr[QIndex] = "-1";
         setAnswers(darr);
@@ -225,9 +234,7 @@ function QuizStart() {
         setbtnStyles(newstyle);
     }
 
-    const quiz = useSelector(state => state.auth.quiz);
-
-    let btns = Answers.map((val,index) => <button style={btnStyles[index]} onClick={() => setQIndex(index)}>{index===Answers.length-1 ? 'END':index+1}</button>)
+    let btns = Answers.map((val,index) => <button key={index} style={btnStyles[index]} onClick={() => setQIndex(index)}>{index===Answers.length-1 ? 'END':index+1}</button>)
 
     const summary = <div className={classes.summary}>
                         <p>Are You Sure To End The Test ?</p>
@@ -303,22 +310,20 @@ function QuizStart() {
         dispatch(authActions.setQuiz());
     }
     
-    return (
-        <div className={classes.QuizStart}>
-            {!forcedExit && !normalExit && <div><div>
-                <MyTimer expiryTimestamp={time} val={true} finishHandler={Finish} />
-            </div>
-            <div className={classes.btns}>
-                {btns}
-            </div>
-            <div id="myvideo" style={{backgroundColor:"white"}}>
-                {quizData}
-            </div></div>}
-            {forcedExit && !normalExit && <h1>You Violated Exam Rule</h1>}
-            {normalExit && <h1>Congratulations You Successfully Completed Test</h1>}
-            {!inFullScreen && <button className='btn btn-secondary btn-lg' onClick={goBackHandler}>GO BACK</button>}
-        </div>
-    )
+    return loading ? <Spinner/> : <div className={classes.QuizStart}>
+    {!forcedExit && !normalExit && <div><div>
+        <MyTimer expiryTimestamp={time} val={true} finishHandler={Finish} />
+    </div>
+    <div className={classes.btns}>
+        {btns}
+    </div>
+    <div id="myvideo" style={{backgroundColor:"white"}}>
+        {quizData}
+    </div></div>}
+    {forcedExit && !normalExit && <h1>You Violated Exam Rule</h1>}
+    {normalExit && <h1>Congratulations You Successfully Completed Test</h1>}
+    {!inFullScreen && <button className='btn btn-secondary btn-lg' onClick={goBackHandler}>GO BACK</button>}
+</div>
 }
 
 export default QuizStart

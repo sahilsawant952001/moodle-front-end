@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Link, useHistory } from 'react-router-dom';
+import { authActions } from '../../Store/Auth';
 import classes from '../AllCourses/AllCourses.module.css';
+import Spinner from '../../Spinner/Spinner';
 
 
 function AllCourses() {
@@ -16,8 +18,13 @@ function AllCourses() {
 
     const [allCourses, setallCourses] = useState([]);
 
+    const loading  = useSelector(state => state.auth.loading);
+
+    const dispatch = useDispatch();
+
     useEffect(() => {
         async function Call(){
+            dispatch(authActions.setLoading());
             fetch('http://localhost:4000/AllCourses',{
                 method:'POST',
                 body:JSON.stringify({
@@ -31,6 +38,7 @@ function AllCourses() {
                 return res.json();
             })
             .then( data => {
+                dispatch(authActions.setLoading());
                 if(data.success){
                     setallCourses(data.courses);
                 }else{
@@ -39,6 +47,7 @@ function AllCourses() {
                 }
             })
             .catch( err =>{
+                dispatch(authActions.setLoading());
                 alert('SOME ERROR OCCURED');
                 history.goBack();
             })
@@ -54,7 +63,7 @@ function AllCourses() {
     if(allCourses.length!==0){
         cdata = allCourses.map( course => {
             const url = '/Teacher/'+param.dept+'/'+param.teacher+'/Course/'+course._id;
-            return <Link to={{
+            return <Link key={course._id} to={{
                 pathname:url,
                 state:{
                     courseInfo:course
@@ -64,13 +73,13 @@ function AllCourses() {
     }
 
     return (
-        <div className={classes.AllCourses}>
-            <h1>Courses By Prof. {teachername+" "+teachersurname} </h1>
-            <ul className="list-group" style={{width:"50%",margin:"5% auto"}}>
-                {cdata}
-                <Link to={url1} style={{margin:"2% 0"}} className='btn btn-dark'>Create Course</Link>
-            </ul>
-        </div>
+        loading ? <Spinner/> : <div className={classes.AllCourses}>
+        <h1>Courses By Prof. {teachername+" "+teachersurname} </h1>
+        <ul className="list-group" style={{width:"50%",margin:"5% auto"}}>
+            {cdata}
+            <Link to={url1} style={{margin:"2% 0"}} className='btn btn-dark'>Create Course</Link>
+        </ul>
+    </div>
     )
 }
 

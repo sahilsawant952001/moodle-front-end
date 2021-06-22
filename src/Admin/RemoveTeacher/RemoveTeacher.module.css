@@ -1,5 +1,6 @@
 .RemoveTeacher h1{
-    color: grey;
-    text-transform: uppercase;
-    margin: 3% auto;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 60px;
+    color: #52616B;
+    text-shadow: 2px 2px #A1EAFB;
 }

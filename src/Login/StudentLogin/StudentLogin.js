@@ -1,4 +1,4 @@
-import React, { Profiler, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import Spinner from '../../Spinner/Spinner';
@@ -117,15 +117,13 @@ function StudentLogin() {
         });
     }
 
-    // console.log(profile)
-
     return (
         loading === true ? <Spinner/> : <div className={classes.StudentLogin}>
         <h1>{isSignIn?'STUDENT SIGN IN':'STUDENT SIGN UP'}</h1>
-        <form onSubmit={formSubmitHandler}>
-            <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
-                {error!==null ? <h2>{error}</h2>:null}
-                <div className="card-body">
+        <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
+            <div className="card-body">
+                <form onSubmit={formSubmitHandler}>
+                    {error!==null ? <h2>{error}</h2>:null}
                     {!isSignIn?<div className="form-group">
                         <input value={name} onChange={nameHandler}  required type="text" className="form-control" id="formGroupExampleInput1" placeholder="Enter Name"/>
                     </div>:null}
@@ -157,9 +155,9 @@ function StudentLogin() {
                     <div className="form-group">
                         <button id={classes.submitbtn} className="btn btn-outline-dark btn-block" onClick={ () => setisSignIn(!isSignIn) } >{isSignIn?"Switch To Sign Up":"Switch To Sign In"}</button>
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
     )
 }

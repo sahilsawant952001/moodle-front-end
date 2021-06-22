@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import classes from '../AllCourses/AllCourses.module.css';
+import Spinner from '../../Spinner/Spinner';
+import { authActions } from '../../Store/Auth';
 
 function AllCourses() {
 
@@ -18,6 +20,10 @@ function AllCourses() {
     const studentID = useSelector(state => state.auth.id);
 
     const history = useHistory();
+
+    const loading = useSelector(state => state.auth.loading);
+
+    const dispatch = useDispatch();
   
     useEffect(() => {
         async function Call(){
@@ -34,6 +40,7 @@ function AllCourses() {
                 return res.json();
             })
             .then( data => {
+                dispatch(authActions.setLoading());
                 if(data.success){
                     setallCourses(data.courses);
                 }else{
@@ -42,16 +49,19 @@ function AllCourses() {
                 }
             })
             .catch( err =>{
+                dispatch(authActions.setLoading());
                 alert('SOME ERROR OCCURED');
                 history.goBack();
             })
         }
+        dispatch(authActions.setLoading());
         Call();
     },[])
 
     let cdata = null;
 
     async function checkEnrollStatus(enrollkey,courseid,teacherid,urlToCourse,courseName){
+        dispatch(authActions.setLoading());
         fetch('http://localhost:4000/Student/EnrollStatus',{
             method:'POST',
             body:JSON.stringify({
@@ -68,6 +78,7 @@ function AllCourses() {
             return res.json();
         })
         .then( data => {
+            dispatch(authActions.setLoading());
             if(data.success){
                 history.push({
                     pathname:urlToCourse,
@@ -80,6 +91,7 @@ function AllCourses() {
             }else{
                 const x = window.prompt('YOU ARE NOT ENROLLED IN THIS COURSE ENTER ENROLLMENT KEY : ');
                 if(x === enrollkey){
+                    dispatch(authActions.setLoading());
                     fetch('http://localhost:4000/Student/Enroll',{
                         method:'POST',
                         body:JSON.stringify({
@@ -96,6 +108,7 @@ function AllCourses() {
                         return res.json();
                     })
                     .then( data => {
+                        dispatch(authActions.setLoading());
                         if(data.success){
                             alert('ENROLLMENT SUCCESSFULL');
                             history.push({
@@ -111,6 +124,7 @@ function AllCourses() {
                         }
                     })
                     .catch( err => {
+                        dispatch(authActions.setLoading());
                         alert('FAILED TO ENROLL');
                     })
                 }else{
@@ -119,6 +133,7 @@ function AllCourses() {
             }
         })
         .catch( err => {
+            dispatch(authActions.setLoading());
             alert('FAILED TO FETCH ENROLLMENT STATUS');
         })
     }
@@ -126,19 +141,17 @@ function AllCourses() {
     if(allCourses.length!==0){
         cdata = allCourses.map( course => {
             const urlToCourse = '/Student/'+param.dept+'/'+param.teacher+'/Course/'+course._id;
-            return <div onClick={() => checkEnrollStatus(course.enrollKey,course._id,course.teacherID,urlToCourse,course.courseName)}><li style={{padding:'5% 5%'}} className="list-group-item">{course.courseName}<button className='btn btn-secondary' style={{float:'right'}}>View</button></li></div>
+            return <div key={course._id} onClick={() => checkEnrollStatus(course.enrollKey,course._id,course.teacherID,urlToCourse,course.courseName)}><li style={{padding:'5% 5%'}} className="list-group-item">{course.courseName}<button className='btn btn-secondary' style={{float:'right'}}>View</button></li></div>
         });
     }
 
 
-    return (
-        <div className={classes.AllCourses}>
-            <h1>COURSES BY PROF. { teacherName.toUpperCase() + " " + teacherSurname.toUpperCase() }</h1>
-            {cdata!==null ? <ul className="list-group" style={{width:"50%",margin:"1% auto"}}>
-                {cdata}
-            </ul>:<h2>No Courses Yet</h2>}
-        </div>
-    )
+    return loading ? <Spinner/> :  <div className={classes.AllCourses}>
+        <h1>COURSES BY PROF. { teacherName.toUpperCase() + " " + teacherSurname.toUpperCase() }</h1>
+        {cdata!==null ? <ul className="list-group" style={{width:"50%",margin:"1% auto"}}>
+            {cdata}
+        </ul>:<h2>No Courses Yet</h2>}
+    </div>
 }
 
 export default AllCourses

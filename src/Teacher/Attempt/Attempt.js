@@ -1,10 +1,8 @@
 import React from 'react';
-import { useParams } from 'react-router';
 import { useLocation } from 'react-router-dom';
 import classes from '../Attempt/Attempt.module.css';
 
 function Attempt() {
-    const param = useParams();
 
     const location = useLocation();
 
@@ -29,7 +27,7 @@ function Attempt() {
             </div>
 
             {quizInfo.quizQuestions.map( (item,index) => {
-                return <div className='card' style={{margin:'3% auto',width:'80%'}}>
+                return <div key={item.Qquestion} className='card' style={{margin:'3% auto',width:'80%'}}>
                             <div className='card-body'>
                                 <h6>{item.Qquestion}</h6>
                                 <p>1. {item.Qoption1}</p>

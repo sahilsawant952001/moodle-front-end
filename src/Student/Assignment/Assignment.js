@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import classes from '../Assignment/Assignment.module.css';
+import { storage } from '../../firebase';
+import Spinner from '../../Spinner/Spinner';
+import { authActions } from '../../Store/Auth';
 
 function Assignment() {
     const location = useLocation();
@@ -10,11 +13,9 @@ function Assignment() {
 
     const [name, setname] = useState("");
 
-    const [submissionDate, setsubmissionDate] = useState("");
-
     const [fileUrl, setfileUrl] = useState("");
 
-    const id = useSelector(state => state.auth.id);
+    const [file, setfile] = useState(null);
 
     const [isSubmited, setisSubmited] = useState(false);
 
@@ -22,8 +23,53 @@ function Assignment() {
 
     const studentID = useSelector(state => state.auth.id);
 
+    const loading = useSelector(state => state.auth.loading);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(fileUrl!==""){
+            fetch('http://localhost:4000/Student/AddSubmission',{
+                method:'POST',
+                body:JSON.stringify({
+                    name:name,
+                    fileUrl:fileUrl,
+                    submissionDate:newdate,
+                    assignmentID:param.assignmentID,
+                    teacherID:param.teacher,
+                    studentID:studentID,
+                    maxMarks:maxMarks,
+                    courseID:param.CourseID
+                }),
+                headers:{
+                    'Content-Type':'application/json'
+                }
+            })
+            .then( res => {
+                return res.json();
+            })
+            .then( data => {
+                dispatch(authActions.setLoading());
+                if(data.success){
+                    alert(data.message);
+                    history.goBack();
+                }else{
+                    alert(data.message);
+                    history.goBack();
+                }
+            })
+            .catch( err =>{
+                dispatch(authActions.setLoading());
+                alert('SOMETHING WENT WRONG');
+            })
+            setfileUrl("");
+        } 
+ 
+     },[fileUrl])
+
     useEffect(()=>{
         async function Call(){
+            dispatch(authActions.setLoading());
             fetch('http://localhost:4000/GetSubmissionStatus',{
                 method:'POST',
                 body:JSON.stringify({
@@ -39,6 +85,7 @@ function Assignment() {
                 return res.json();
             })
             .then( data => {
+                dispatch(authActions.setLoading());
                 if(data.success){
                     setsubmitedData(data);
                     if(data.lentgh!==0){
@@ -49,6 +96,7 @@ function Assignment() {
                 }
             })
             .catch(err => {
+                dispatch(authActions.setLoading());
                 alert('ERROR OCCURED WHILE FETCHING DATA');
             })
         }
@@ -56,11 +104,9 @@ function Assignment() {
     },[])
 
     function fileHandler(event){
-        setfileUrl(event.target.value);
-    }
-
-    function dateHandler(event){
-        setsubmissionDate(event.target.value);
+        if(event.target.files[0]){
+            setfile(event.target.files[0]);
+        }
     }
 
     function nameHandler(event){
@@ -77,67 +123,67 @@ function Assignment() {
 
     async function formSubmitHandler(event){
         event.preventDefault();
-        fetch('http://localhost:4000/Student/AddSubmission',{
-            method:'POST',
-            body:JSON.stringify({
-                name:name,
-                fileUrl:fileUrl,
-                submissionDate:newdate,
-                marks:marks,
-                assignmentID:param.assignmentID,
-                teacherID:param.teacher,
-                studentID:studentID
-            }),
-            headers:{
-                'Content-Type':'application/json'
-            }
-        })
-        .then( res => {
-            return res.json();
-        })
-        .then( data => {
-            if(data.success){
-                alert(data.message);
-                history.goBack();
-            }else{
-                alert(data.message);
-                history.goBack();
-            }
-        })
-        .catch( err =>{
-            alert('SOMETHING WENT WRONG');
-        })
+        dispatch(authActions.setLoading());
+        const uploadTask = storage.ref(`submissions/${file.name}`).put(file);
+        uploadTask.on(
+        "state_changed",
+        snapshot => {
+            
+        },
+        error => {
+            dispatch(authActions.setLoading());
+        },
+        () => {
+            storage
+            .ref("submissions")
+            .child(file.name)
+            .getDownloadURL()
+            .then(url => {
+                setfileUrl(url)
+            });
+        }
+        );
     }
 
     async function updateHandler(event){
         event.preventDefault();
-        fetch('http://localhost:4000/Student/UpdateSubmission',{
-            method:'POST',
-            body:JSON.stringify({
-                name:name,
-                fileUrl:fileUrl,
-                submissionDate:newdate,
-                assignmentID:param.assignmentID,
-                teacherID:param.teacher,
-                studentID:studentID
-            }),
-            headers:{
-                'Content-Type':'application/json'
-            }
+        dispatch(authActions.setLoading());
+        const uploadTask = storage.refFromURL(submitedData.data[0].fileUrl);
+        uploadTask.delete()
+        .then(() => {
+            fetch('http://localhost:4000/Student/DeleteSubmission',{
+                method:'POST',
+                body:JSON.stringify({
+                    studentID:studentID,
+                    assignmentID:param.assignmentID,
+                    teacherID:teacherID
+                }),
+                headers:{
+                    'Content-Type':'application/json'
+                }
+            })
+            .then( res => {
+                return res.json();
+            })
+            .then( data => {
+                dispatch(authActions.setLoading());
+                if(data.success){
+                    alert(data.message);
+                    history.goBack();
+                }else{
+                    alert(data.message);
+                    history.goBack();
+                }
+            })
+            .catch( err =>{
+                dispatch(authActions.setLoading());
+                alert('SOMETHING WENT WRONG');
+            })
+            
+            history.goBack();
         })
-        .then( res => {
-            return res.json();
-        })
-        .then( data => {
-            if(data.success){
-                alert(data.message);
-                history.goBack();
-            }else{
-                alert(data.message);
-                history.goBack();
-            }
-        })
-        .catch( err =>{
+        .catch(err => {
+            dispatch(authActions.setLoading());
             alert('SOMETHING WENT WRONG');
         })
     }
@@ -177,54 +223,48 @@ function Assignment() {
         marskInfo = <h3>You got {submitedData.data[0].marks}/{maxMarks} </h3>
     }
 
-    return (
-        <div className={classes.Assignment}>
-            <div className='card' style={{width:"70%",margin:"5% auto",padding:"2%"}}>
-                <div className='card-body'>
-                    <h1>{filename}</h1>
-                    <h1><button onClick={viewAssignmentHandler} className='btn btn-secondary btn-lg'>View Assignment</button></h1>
-                    {submitedData===null ?<h1>Submit Your Work</h1>:<h3>You have submitted Assignment on {x.toDateString()} <h1><button className='btn btn-secondary' onClick={viewHandler}>VIEW SUBMISSION</button></h1> </h3>}
-                    {(submitedData!==null && x>y) && <h3>Assignment Submitted Late</h3>}
-                    {(submitedData!==null && x<=y) && <h3>Assignment Submitted On Time</h3>}
-                    {isSubmited===true && submitedData!==null && submitedData.data[0].marks!=='NG' ? marskInfo:null}
-                </div>
-            </div>
-            {submitedData!==null && submitedData.data[0].marks === "NG" ? <div className="card" style={{width:"30%",margin:"5% auto",padding:"5%"}}>
-                <form onSubmit={isSubmited===true ? updateHandler : formSubmitHandler}>
-                    <div className="form-group">
-                        <input value={name} onChange={nameHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Assignment Name"/>
-                    </div>
-                    <div className="form-group">
-                        <input value={fileUrl} onChange={fileHandler} type="text" className="form-control" id="exampleFormControlFile1" placeholder="Enter File Url"/>
-                    </div>
-                    <div className="form-group">
-                        <input value={submissionDate} onChange={dateHandler} type="date" className="form-control" id="exampleFormControlFile1" placeholder="Enter Submission Deadline"/>
-                    </div>
-                    <div className="form-group">
-                        <button className="btn btn-dark btn-block">{isSubmited?"Update":"Submit"}</button>
-                    </div>   
-                </form>
-            </div>:submitedData===null ? 
-            <div className="card" style={{width:"30%",margin:"5% auto",padding:"5%"}}>
-                <div>
-                    <form onSubmit={isSubmited===true ? updateHandler : formSubmitHandler}>
-                        <div className="form-group">
-                            <input value={name} onChange={nameHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Assignment Name"/>
-                        </div>
-                        <div className="form-group">
-                            <input value={fileUrl} onChange={fileHandler} type="text" className="form-control" id="exampleFormControlFile1" placeholder="Enter File Url"/>
-                        </div>
-                        <div className="form-group">
-                            <input value={submissionDate} onChange={dateHandler} type="date" className="form-control" id="exampleFormControlFile1" placeholder="Enter Submission Deadline"/>
-                        </div>
-                        <div className="form-group">
-                            <button className="btn btn-dark btn-block">{isSubmited?"Update":"Submit"}</button>
-                        </div>   
-                    </form>
-                </div>
-            </div>:null}
+    return loading ? <Spinner/> : <div className={classes.Assignment}>
+    <div className='card' style={{width:"70%",margin:"5% auto",padding:"2%"}}>
+        <div className='card-body'>
+            <h1>{filename}</h1>
+            <h1><button onClick={viewAssignmentHandler} className='btn btn-secondary btn-lg'>View Assignment</button></h1>
+            {submitedData===null ?<h4>Submit Your Work</h4>:<h3>You have submitted Assignment on {x.toDateString()} <h1><button className='btn btn-secondary' onClick={viewHandler}>VIEW SUBMISSION</button></h1> </h3>}
+            {(submitedData!==null && x>y) && <h3>Assignment Submitted Late</h3>}
+            {(submitedData!==null && x<=y) && <h3>Assignment Submitted On Time</h3>}
+            {isSubmited===true && submitedData!==null && submitedData.data[0].marks!=='NG' ? marskInfo:null}
         </div>
-    )
+    </div>
+    {submitedData!==null && submitedData.data[0].marks === "NG" ? <div className="card" style={{width:"30%",margin:"5% auto",padding:"5%"}}>
+        <form onSubmit={isSubmited===true ? updateHandler : formSubmitHandler}>
+            {!isSubmited && <div>
+                <div className="form-group">
+                    <input value={name} onChange={nameHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Assignment Name"/>
+                </div>
+                <div className="form-group">
+                    <input onChange={fileHandler} type="file" className="form-control" id="exampleFormControlFile1" placeholder="Select File"/>
+                </div>
+            </div>}
+            <div className="form-group">
+                <button className="btn btn-dark btn-block">{isSubmited?"DELETE SUBMISSION":"Submit"}</button>
+            </div>   
+        </form>
+    </div>:submitedData===null ? 
+    <div className="card" style={{width:"30%",margin:"5% auto",padding:"5%"}}>
+        <div>
+            <form onSubmit={isSubmited===true ? updateHandler : formSubmitHandler}>
+                <div className="form-group">
+                    <input value={name} onChange={nameHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Assignment Name"/>
+                </div>
+                <div className="form-group">
+                    <input onChange={fileHandler} type="file" className="form-control" id="exampleFormControlFile1" placeholder="Select File"/>
+                </div>
+                <div className="form-group">
+                    <button className="btn btn-dark btn-block">{isSubmited?"Update":"Submit"}</button>
+                </div>   
+            </form>
+        </div>
+    </div>:null}
+</div>
 }
 
 export default Assignment

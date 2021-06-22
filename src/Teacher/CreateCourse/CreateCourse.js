@@ -1,12 +1,13 @@
-import React, { useState,useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState} from 'react';
+import { useSelector,useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import classes from '../CreateCourse/CreateCourse.module.css';
 import Spinner from '../../Spinner/Spinner';
+import { authActions } from '../../Store/Auth';
 
 function CreateCourse() {
-    const param = useParams();
+ 
+    const dispatch = useDispatch();
 
     const [id, setid] = useState("");
 
@@ -26,18 +27,13 @@ function CreateCourse() {
         setenrollKey(event.target.value);
     }
 
-    function formSubmitHandler(event){
-        event.preventDefault();
-        alert('Successfully Created Course');
-        history.goBack();
-    }
-
     const teacherID = useSelector(state => state.auth.id);
 
     const history = useHistory();
 
     async function Call(event){
         event.preventDefault();
+        dispatch(authActions.setLoading());
         fetch('http://localhost:4000/CreateCourse',{
             method:'POST',
             body:JSON.stringify({
@@ -54,10 +50,12 @@ function CreateCourse() {
             return res.json();
         })
         .then( data =>{
+            dispatch(authActions.setLoading());
             alert(data.message);
             history.goBack();
         })
         .catch((err) => {
+            dispatch(authActions.setLoading());
             alert('SOMETHING WENT WRONG');
         })
     }

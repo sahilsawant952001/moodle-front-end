@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import classes from "../Course/Course.module.css";
+import Spinner from '../../Spinner/Spinner';
+import { authActions } from '../../Store/Auth';
 
 function Course() {
 
@@ -16,8 +19,13 @@ function Course() {
 
     const [quizes, setquizes] = useState([]);
 
+    const loading = useSelector(state => state.auth.loading);
+
+    const dispatch = useDispatch();
+
     useEffect(() => {
         async function Call(){
+            dispatch(authActions.setLoading());
             fetch('http://localhost:4000/GetMaterial',{
                 method:'POST',
                 body:JSON.stringify({
@@ -90,6 +98,7 @@ function Course() {
             .catch( err => {
                 alert('FAILED TO LOAD QUIZES');
             })
+            dispatch(authActions.setLoading());
         }
         Call();
     },[])
@@ -102,7 +111,7 @@ function Course() {
     if(materials.length!==0){
         data1 = materials.map( item => {
             const url = '/Student/'+param.dept+'/'+param.teacher+'/Course/'+item.courseID+'/Material/'+item._id
-            return <Link to={{
+            return <Link key={item._id} to={{
                 pathname:url,
                 state:{
                     filename:item.name,
@@ -115,7 +124,7 @@ function Course() {
     if(assignments.length!==0){
         data2 = assignments.map( item => {
             const url = '/Student/'+param.dept+'/'+param.teacher+'/Course/'+item.courseID+'/Assignment/'+item._id;
-            return <Link to={{
+            return <Link key={item._id} to={{
                 pathname:url,
                 state:{
                     filename:item.name,
@@ -131,7 +140,7 @@ function Course() {
     if(quizes.length!==0){
         data3 = quizes.map(item => {
             const url = '/Student/'+param.dept+'/'+param.teacher+'/Course/'+param.CourseID+'/Quiz';
-            return <Link to={{
+            return <Link key={item._id} to={{
                 pathname:url,
                 state:{
                     quizInfo:item
@@ -140,11 +149,10 @@ function Course() {
         })
     }
 
-    return (
-        <div className={classes.Course}>
+    return loading ? <Spinner/> : <div className={classes.Course}>
             <h1>Welcome TO {courseName}</h1>
             <h4>Study Material</h4>
-             {materials.length===0 ? <p>{data1}</p> : <ul className="list-group" style={{width:"50%",margin:"5% auto"}}>
+            {materials.length===0 ? <p>{data1}</p> : <ul className="list-group" style={{width:"50%",margin:"5% auto"}}>
                 {data1}
             </ul>}
             <h4>Assignments</h4>
@@ -156,7 +164,6 @@ function Course() {
                 {data3}
             </ul>
         </div>
-    )
 }
 
 export default Course

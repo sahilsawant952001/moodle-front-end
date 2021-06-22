@@ -54,42 +54,55 @@ function Navbar() {
     return (
         <div>
             <div className={classes.Navbar1}>
-                <nav className="navbar navbar-light bg-light">
+                <nav className="navbar navbar-expand-lg navbar-light bg-light">
                     {!quiz ? <Link className="navbar-brand" to={urlHome}>
                         <img src="https://media-exp1.licdn.com/dms/image/C510BAQHE1bLMZIcIxw/company-logo_200_200/0/1552644853195?e=2159024400&v=beta&t=gSN4Rm30wZuctbeBBqiEZ761CbzGXXb7NjVeg7ZrDuQ" width="40px" height="40px" className="d-inline-block align-top" alt="icon"/>
                         <span style={{color:'black'}}>Sardar Patel Institute Of Technology</span>
-                    </Link>:<div>
+                        </Link>:<div>
                         <img src="https://media-exp1.licdn.com/dms/image/C510BAQHE1bLMZIcIxw/company-logo_200_200/0/1552644853195?e=2159024400&v=beta&t=gSN4Rm30wZuctbeBBqiEZ761CbzGXXb7NjVeg7ZrDuQ" width="40px" height="40px" className="d-inline-block align-top" alt="icon"/>
                         <span>Sardar Patel Institute Of Technology</span>
                     </div>}
-                    {(isAuthenticated && !quiz) && <span>
-                        <span>
-                            <Link to={urlBlog}>
-                                <IconButton>
-                                    <ForumIcon/>
-                                </IconButton>
-                            </Link>
-                        </span>
-                        <span>
-                            <Link to={urlHome}>
-                                <IconButton>
-                                    <HomeIcon/>
-                                </IconButton>
-                            </Link>
-                        </span>
-                        <span>
-                            <Link to={urlProfile}>
-                                <IconButton>
-                                    <AccountCircleIcon/>
-                                </IconButton>
-                            </Link>
-                        </span>
-                        <span onClick={ logOutHandler }>
-                            <IconButton>
-                                <ExitToAppIcon/>
-                            </IconButton>                
-                        </span>
-                    </span>}
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    {(isAuthenticated && !quiz) && <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav  ml-auto" >
+                            <li className="nav-item active">
+                                    <span>
+                                        <Link to={urlBlog}>
+                                            <IconButton>
+                                                <ForumIcon/>
+                                            </IconButton>
+                                        </Link>
+                                    </span>
+                            </li>
+                            <li className="nav-item">
+                                    <span>
+                                        <Link to={urlHome}>
+                                            <IconButton>
+                                                <HomeIcon/>
+                                            </IconButton>
+                                        </Link>
+                                    </span>
+                            </li>
+                            <li className="nav-item">
+                                    <span>
+                                        <Link to={urlProfile}>
+                                            <IconButton>
+                                                <AccountCircleIcon/>
+                                            </IconButton>
+                                        </Link>
+                                    </span>
+                            </li>
+                            <li className="nav-item">
+                                    <span onClick={ logOutHandler }>
+                                        <IconButton>
+                                            <ExitToAppIcon/>
+                                        </IconButton>                
+                                    </span>
+                            </li>
+                        </ul>
+                    </div>}
                 </nav>
             </div>
         </div>

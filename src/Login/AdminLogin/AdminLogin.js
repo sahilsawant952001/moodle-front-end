@@ -102,10 +102,10 @@ function AdminLogin() {
     return (
         Loading ===true ? <Spinner/>:<div className={classes.AdminLogin}>
         <h1>{isSignIn?'ADMIN SIGN IN':'ADMIN SIGN UP'}</h1>
-        <form onSubmit={formSubmitHandler}>
-            <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
-                {error!==null ? <h2>{error}</h2>:null}
-                <div className="card-body">
+        <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
+            <div className="card-body">
+                <form onSubmit={formSubmitHandler}>
+                    {error!==null ? <h2>{error}</h2>:null}
                     {!isSignIn?<div className="form-group">
                         <input value={name} onChange={nameHandler} required type="text" className="form-control" id="formGroupExampleInput1" placeholder="Enter Name"/>
                     </div>:null}
@@ -130,9 +130,9 @@ function AdminLogin() {
                     <div className="form-group">
                         <button id={classes.submitbtn} className="btn btn-outline-dark btn-block" onClick={ () => setisSignIn(!isSignIn) } >{isSignIn?"Switch To Sign Up":"Switch To Sign In"}</button>
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
     )
 }

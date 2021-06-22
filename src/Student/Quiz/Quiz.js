@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import classes from '../Quiz/Quiz.module.css';
+import Spinner from '../../Spinner/Spinner';
+import { authActions } from '../../Store/Auth';
 
 function Quiz() {
     const location = useLocation();
@@ -14,7 +16,9 @@ function Quiz() {
 
     const [myPass, setmyPass] = useState("");
 
-    const [message, setmessage] = useState("");
+    const loading = useSelector(state => state.auth.loading);
+
+    const dispatch = useDispatch();
 
     function myPassHandler(event){
         setmyPass(event.target.value);
@@ -24,6 +28,7 @@ function Quiz() {
 
     function CheckPassword(original,mypass){
         if(original===mypass){
+            dispatch(authActions.setLoading());
             const url = '/Student/'+ param.dept +'/'+ param.teacher +'/Course/'+ param.CourseID +'/Quiz/'+quizInfo.quizID;
             fetch('http://localhost:4000/Student/CheckAttempt',{
                 method:'POST',
@@ -42,6 +47,7 @@ function Quiz() {
                 return res.json();
             })
             .then(data => {
+                dispatch(authActions.setLoading());
                 if(data.success){
                     history.push({
                         pathname:url,
@@ -54,6 +60,7 @@ function Quiz() {
                 }
             })
             .catch(err => {
+                dispatch(authActions.setLoading());
                 alert('SOMETHING WENT WRONG');
             })
         }else{
@@ -73,11 +80,17 @@ function Quiz() {
                         <p>9. You will be able to view the scores once your test is complete.</p>
                   </div>
 
-    return (
-        <div className={classes.Quiz}>
-            <h1>{quizInfo.quizName}</h1>
-            <p style={{textAlign:'center',margin:'5% auto'}}>{message}</p>
-            <div className="card" style={{margin:'3% auto 10% auto',width:'55%'}}>
+    const quizstart = new Date(quizInfo.quizDate);
+
+    const quizduration = quizInfo.Duration;
+
+    const quizEnd = new Date(quizstart.getTime()+ parseInt(quizduration)*60000);
+
+    const currentDate = new Date();
+
+    return loading ? <Spinner/> : <div className={classes.Quiz}>
+            <h1>{quizInfo.quizName} QUIZ</h1>
+            {quizstart <= currentDate && currentDate<=quizEnd ? <div className="card" style={{margin:'3% auto 10% auto',width:'55%'}}>
                 <div className="card-header">
                     QUIZ INFORMATION
                 </div>
@@ -101,9 +114,17 @@ function Quiz() {
                         </button>
                     </div>
                 </div>
-            </div>
+            </div>:
+            <div>
+                <div>
+                    <p style={{textAlign:'center',margin:'5% auto'}}>QUIZ NOT CURRENTLY AVAILABLE</p>
+                    <p>THIS QUIZ WILL BE AVAILABLE BETWEEN</p><br/>
+                    <p>Date : {quizstart.toLocaleDateString()} Time : {quizstart.toLocaleTimeString()}</p>
+                    <p>To</p>
+                    <p>Date : {quizEnd.toLocaleDateString()} Time : {quizEnd.toLocaleTimeString()}</p>
+                </div>
+            </div>}
         </div>
-    )
 }
 
 export default Quiz

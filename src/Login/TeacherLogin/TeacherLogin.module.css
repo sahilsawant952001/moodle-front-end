@@ -5,3 +5,10 @@
 .TeacherLogin{
     padding: 4%;
 }
+
+.TeacherLogin h1{
+    font-family: 'Bebas Neue', cursive;
+    font-size: 60px;
+    color: #52616B;
+    text-shadow: 2px 2px #A1EAFB;
+}

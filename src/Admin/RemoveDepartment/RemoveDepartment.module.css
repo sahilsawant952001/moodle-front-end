@@ -1,5 +1,6 @@
 .RemoveDepartment h1{
-    color: gray;
-    margin: 3% 0;
-    text-transform: uppercase;
+    font-family: 'Bebas Neue', cursive;
+    font-size: 60px;
+    color: #52616B;
+    text-shadow: 2px 2px #A1EAFB;
 }

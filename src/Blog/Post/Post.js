@@ -5,23 +5,18 @@ import classes from '../Post/Post.module.css';
 function Post() {
 
     const location = useLocation();
-    return (
-        
-        <div className={classes.Post}>
+    return  <div className={classes.Post}>
             <h1>S.P.I.T. Blog</h1>
-            <div className="card" style={{width:"50%",margin:"3% auto"}}>
+            <div className="card" style={{width:"90%",margin:"1% auto"}}>
                 <div className="card-body">
-                    <h1 style={{margin:"4% auto"}}>{location.state.title}</h1>
-                    <img src={location.state.image} height='300px' width='300px' alt='post'/>
-                    <div className="card" style={{margin:"4% auto"}}>
-                        <div className="card-body">
-                            <h6>{location.state.content}</h6>  
-                        </div>
-                    </div>
+                    <h3 className='card-title' style={{margin:"4% auto"}}>{location.state.title}</h3>
+                    <img src={location.state.image} height='50%' width='50%' alt='post'/>
+                    <h6 style={{margin:'5% 2%'}}>{location.state.content}</h6>  
+                    <p className="card-text"><small className="text-muted">{location.state.authorType} : {location.state.authorID}</small></p>
                 </div>
             </div>
         </div>
-    )
+    
 }
 
 export default Post

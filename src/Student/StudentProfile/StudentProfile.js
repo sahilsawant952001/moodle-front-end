@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import classes from '../StudentProfile/StudentProfile.module.css';
 
 function StudentProfile() {
-
-    const [myCourses, setmyCourses] = useState([]);
 
     const profile = useSelector(state => state.auth);
 
@@ -12,7 +10,7 @@ function StudentProfile() {
         <div className={classes.StudentProfile}>
             <div className="card" style={{width:"50%",margin:"5% auto",padding:"5%"}}>
                 <div className="card-body">
-                    <img src='https://moodle.spit.ac.in/pluginfile.php/27651/user/icon/clean/f1?rev=2728449' alt='profile'/>
+                    <img height='20%' width='20%' src='https://static.vecteezy.com/system/resources/thumbnails/000/550/731/small_2x/user_icon_004.jpg' alt='profile'/>
                 </div>
                 <div className="card" style={{width:"100%",margin:"5% auto",padding:"5%"}}>
                     <div className="card-body">

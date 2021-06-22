@@ -42,6 +42,9 @@ import NotFound from './NotFound/NotFound';
 import ViewSubmission from './Student/ViewSubmission/ViewSubmission';
 import ViewAssignment from './Student/ViewAssignment/ViewAssignment';
 import ViewAssignmentT from './Teacher/ViewAssignmentT/ViewAssignmentT';
+import CreatePost from './Blog/CreatePost/CreatePost';
+import ViewMaterial from './Teacher/ViewMaterial/ViewMaterial';
+import MyPosts from './Blog/MyPosts/MyPosts';
 
 function App() {
 
@@ -69,7 +72,9 @@ function App() {
                     <Route path='/Admin/AddTeacher' component={AddTeacher} exact/>
                     <Route path='/Admin/RemoveTeacher' component={RemoveTeacher} exact/>
                     <Route path='/Blog' component={Posts} exact/>
-                    <Route path='/Blog/:postID' component={Post} exact/>
+                    <Route path='/Blog/Posts/:postID' component={Post} exact/>
+                    <Route path='/Blog/CreatePost' component={CreatePost} exact/>
+                    <Route path='/Blog/MyPosts' component={MyPosts} />
                     <Redirect to='/NotFound'/>
               </Switch>
   }
@@ -87,13 +92,15 @@ function App() {
                     <Route path='/Teacher/:dept/:teacher/Course/:courseID/Enrolled/:studentID' component={StudentReport} exact/>
                     <Route path='/Teacher/:dept/:teacher/Course/:courseID/Assignments/:assignmentID' component={AllSubmissions} exact/>
                     <Route path='/Teacher/:dept/:teacher/Course/:courseID/Assignments/:assignmentID/Submissions/:submissionID' component={Submission} exact/>
-                    <Route path='/Teacher/:dept/:teacher/Course/:CourseID/Assignment/:assignmentID/ViewAssignment' component={ViewAssignmentT} exact/>
+                    <Route path='/Teacher/:dept/:teacher/Course/:courseID/Assignments/:assignmentID/ViewAssignment' component={ViewAssignmentT} exact/>
                     <Route path='/Teacher/:dept/:teacher/Course/:courseID/Quiz/:quizID' component={AllAttempts} exact/>
                     <Route path='/Teacher/:dept/:teacher/Course/:courseID/Quiz/:quizID/Attempt/:attemptID' component={Attempt} exact/>
                     <Route path='/Teacher/:dept/:teacher/Course/:courseID/UploadMaterial' component={AddMaterial} exact/>
-                    <Route path='/Teacher/:dept/:teacher/Course/:courseID/Material/:materialID' component={MaterialView} exact/>
+                    <Route path='/Teacher/:dept/:teacher/Course/:courseID/Material/:materialID' component={ViewMaterial} exact/>
                     <Route path='/Blog' component={Posts} exact/>
-                    <Route path='/Blog/:postID' component={Post} exact/>
+                    <Route path='/Blog/Posts/:postID' component={Post} exact/>
+                    <Route path='/Blog/Posts/CreatePost' component={CreatePost} />
+                    <Route path='/Blog/MyPosts' component={MyPosts} />
                     <Redirect to='/NotFound'/>
               </Switch>
   }
@@ -111,7 +118,9 @@ function App() {
                     <Route path='/Student/:dept/:teacher/Course/:CourseID/Quiz' component={Quiz} exact/>
                     <Route path='/Student/:dept/:teacher/Course/:CourseID/Quiz/:quizID' component={QuizStart} exact/>
                     <Route path='/Blog' component={Posts} exact/>
-                    <Route path='/Blog/:postID' component={Post} exact/>
+                    <Route path='/Blog/Posts/:postID' component={Post} exact/>
+                    <Route path='/Blog/CreatePost' component={CreatePost} exact/>
+                    <Route path='/Blog/MyPosts' component={MyPosts} />
                     <Redirect to='/NotFound'/>
                 </Switch>
   }

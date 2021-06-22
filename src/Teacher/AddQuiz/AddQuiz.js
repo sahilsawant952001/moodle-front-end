@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import classes from '../AddQuiz/AddQuiz.module.css';
+import Spinner from '../../Spinner/Spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from '../../Store/Auth';
+
 
 function AddQuiz() {
 
@@ -42,6 +46,10 @@ function AddQuiz() {
     const [questionMark, setquestionMark] = useState("");
 
     const [marksArray, setmarksArray] = useState([]);
+
+    const loading = useSelector(state => state.auth.loading);
+
+    const dispatch = useDispatch();
 
     function quizDateHandler(event){
         setquizDate(event.target.value);
@@ -93,6 +101,7 @@ function AddQuiz() {
 
     function formSubmitHandler(event){
         event.preventDefault();
+        dispatch(authActions.setLoading());
         fetch('http://localhost:4000/Teacher/AddQuiz',{
             method:'POST',
             body:JSON.stringify({
@@ -102,7 +111,7 @@ function AddQuiz() {
                 courseID:param.courseID,
                 teacherID:param.teacher,
                 deptID:param.dept,
-                quizDate:quizDate,
+                quizDate:new Date(quizDate),
                 Duration:quizDuration,
                 maxMarks:quizMarks,
                 quizQuestions:questionArray,
@@ -118,6 +127,7 @@ function AddQuiz() {
             return res.json();
         })
         .then(data =>{
+            dispatch(authActions.setLoading());
             if(data.success){
                 alert(data.message);
                 history.goBack();
@@ -126,6 +136,7 @@ function AddQuiz() {
             }
         })
         .catch(err =>{
+            dispatch(authActions.setLoading());
             alert('SOMETHING WENT WRONG');
         })
     }
@@ -155,79 +166,79 @@ function AddQuiz() {
     }
 
     return (
-        <div className={classes.AddQuiz}>
-            <h1>Add Quiz</h1>
-            <div className="row">
-                <div className="col-lg-6">
-                    <form onSubmit={formSubmitHandler}>
-                        <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
-                            <h3>Quiz Information</h3>
-                            <div className="form-group">
-                                <input value={id} onChange={idHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Unique Quiz ID"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={name} onChange={nameHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Quiz Name"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={quizPassword} onChange={quizPasswordHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Quiz Password"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={quizDate} onChange={quizDateHandler} required type="datetime-local" className="form-control" id="formGroupExampleInput3" placeholder="Enter Quiz Date"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={quizDuration} onChange={quizDurationHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Quiz Duration"/>
-                            </div>
-                            <div className="form-group">
-                                <button className="btn btn-dark btn-block">Create Quiz</button>
-                            </div>      
+        loading ? <Spinner/> : <div className={classes.AddQuiz}>
+        <h1>Add Quiz</h1>
+        <div className="row">
+            <div className="col-lg-6">
+                <form onSubmit={formSubmitHandler}>
+                    <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
+                        <h3>Quiz Information</h3>
+                        <div className="form-group">
+                            <input value={id} onChange={idHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Unique Quiz ID"/>
                         </div>
+                        <div className="form-group">
+                            <input value={name} onChange={nameHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Quiz Name"/>
+                        </div>
+                        <div className="form-group">
+                            <input value={quizPassword} onChange={quizPasswordHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Quiz Password"/>
+                        </div>
+                        <div className="form-group">
+                            <input value={quizDate} onChange={quizDateHandler} required type="datetime-local" className="form-control" id="formGroupExampleInput3" placeholder="Enter Quiz Date"/>
+                        </div>
+                        <div className="form-group">
+                            <input value={quizDuration} onChange={quizDurationHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Quiz Duration"/>
+                        </div>
+                        <div className="form-group">
+                            <button className="btn btn-dark btn-block">Create Quiz</button>
+                        </div>      
+                    </div>
+                </form>
+            </div>
+            <div className="col-lg-6">
+                <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
+                    <h3>Add Question</h3>
+                    <form onSubmit={addQuestion}>
+                        <div className="form-group">
+                            <input value={question} onChange={questionHandler} required type="text" className="form-control" id="formGroupExampleInput1" placeholder="Enter Question"/>
+                        </div>
+                        <div className="form-group">
+                            <input value={option1} onChange={option1Handler} required type="text" className="form-control" id="formGroupExampleInput2" placeholder="Enter Option 1"/>
+                        </div>
+                        <div className="form-group">
+                            <input value={option2} onChange={option2Handler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Option 2"/>
+                        </div>
+                        <div className="form-group">
+                            <input value={option3} onChange={option3Handler} required type="text" className="form-control" id="formGroupExampleInput4" placeholder="Enter Option 3"/>
+                        </div>
+                        <div className="form-group">
+                            <input value={option4} onChange={option4Handler} required type="text" className="form-control" id="formGroupExampleInput5" placeholder="Enter Option 4"/>
+                        </div>
+                        <div className="form-group">
+                            <input value={correctOption} onChange={correctOptionHandler} required type="text" className="form-control" id="formGroupExampleInput5" placeholder="Enter Correct Option Number"/>
+                        </div>
+                        <div className="form-group">
+                            <input value={questionMark} onChange={questionMarkHandler} required type="text" className="form-control" id="formGroupExampleInput5" placeholder="Enter Marks For This Question"/>
+                        </div>
+                        <div className="form-group">
+                            <button className="btn btn-dark btn-block">Add Question</button>
+                        </div>   
                     </form>
                 </div>
-                <div className="col-lg-6">
-                    <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
-                        <h3>Add Question</h3>
-                        <form onSubmit={addQuestion}>
-                            <div className="form-group">
-                                <input value={question} onChange={questionHandler} required type="text" className="form-control" id="formGroupExampleInput1" placeholder="Enter Question"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={option1} onChange={option1Handler} required type="text" className="form-control" id="formGroupExampleInput2" placeholder="Enter Option 1"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={option2} onChange={option2Handler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Option 2"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={option3} onChange={option3Handler} required type="text" className="form-control" id="formGroupExampleInput4" placeholder="Enter Option 3"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={option4} onChange={option4Handler} required type="text" className="form-control" id="formGroupExampleInput5" placeholder="Enter Option 4"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={correctOption} onChange={correctOptionHandler} required type="text" className="form-control" id="formGroupExampleInput5" placeholder="Enter Correct Option Number"/>
-                            </div>
-                            <div className="form-group">
-                                <input value={questionMark} onChange={questionMarkHandler} required type="text" className="form-control" id="formGroupExampleInput5" placeholder="Enter Marks For This Question"/>
-                            </div>
-                            <div className="form-group">
-                                <button className="btn btn-dark btn-block">Add Question</button>
-                            </div>   
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <h3>Quiz Preview</h3>
-            <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
-                {questionArray.map( x => {
-                    return  <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
-                                <h4>Question : {x.Qquestion}</h4>
-                                <h6>Option1 : {x.Qoption1}</h6>
-                                <h6>Option2 : {x.Qoption2}</h6>
-                                <h6>Option3 : {x.Qoption3}</h6>
-                                <h6>Option4 : {x.Qoption4}</h6>
-                            </div>
-                })}
             </div>
         </div>
+        <h3>Quiz Preview</h3>
+        <div className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
+            {questionArray.map( x => {
+                return  <div key={x.Qquestion} className="card" style={{width:"70%",margin:"5% auto",padding:"5%"}}>
+                            <h4>Question : {x.Qquestion}</h4>
+                            <h6>Option1 : {x.Qoption1}</h6>
+                            <h6>Option2 : {x.Qoption2}</h6>
+                            <h6>Option3 : {x.Qoption3}</h6>
+                            <h6>Option4 : {x.Qoption4}</h6>
+                        </div>
+            })}
+        </div>
+    </div>
     )
 }
 
