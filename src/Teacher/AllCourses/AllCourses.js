@@ -24,8 +24,9 @@ function AllCourses() {
 
     useEffect(() => {
         async function Call(){
+            
             dispatch(authActions.setLoading());
-            fetch('http://localhost:4000/AllCourses',{
+            fetch('https://blooming-earth-19953.herokuapp.com/AllCourses',{
                 method:'POST',
                 body:JSON.stringify({
                     teacherID:teacherID
@@ -52,9 +53,8 @@ function AllCourses() {
                 history.goBack();
             })
         }
-
         Call();
-    },[])
+    },[dispatch,history,teacherID])
 
     const url1 = '/Teacher/'+param.dept+'/'+param.teacher+'/CreateCourse';
 

@@ -26,8 +26,8 @@ function AddMaterial() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(fileurl!==""){
-            const apiurl = 'http://localhost:4000/Teacher/UploadMaterial';
+        if(fileurl!==""){ 
+            const apiurl = 'https://blooming-earth-19953.herokuapp.com/Teacher/UploadMaterial';
             fetch(apiurl,{
                 method:'POST',
                 body:JSON.stringify({
@@ -54,7 +54,7 @@ function AddMaterial() {
             })
             setfileurl("");
         }
-    },[fileurl])
+    },[fileurl,dispatch,history,id,name,param.courseID,param.teacher])
 
     function idHandler(event){
         setid(event.target.value);

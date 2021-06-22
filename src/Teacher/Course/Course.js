@@ -25,8 +25,9 @@ function Course() {
 
     useEffect(() => {
         async function Call(){
+            
             dispatch(authActions.setLoading());
-            fetch('http://localhost:4000/GetMaterial',{
+            fetch('https://blooming-earth-19953.herokuapp.com/GetMaterial',{
                 method:'POST',
                 body:JSON.stringify({
                     courseID:param.courseID,
@@ -50,7 +51,7 @@ function Course() {
                 alert('FAILED TO LOAD MATERIALS');
             })
 
-            fetch('http://localhost:4000/GetAssignments',{
+            fetch('https://blooming-earth-19953.herokuapp.com/GetAssignments',{
                 method:'POST',
                 body:JSON.stringify({
                     courseID:param.courseID,
@@ -74,7 +75,7 @@ function Course() {
                 alert('FAILED TO LOAD ASSIGNMENTS');
             })
 
-            fetch('http://localhost:4000/Teacher/GetQuizes',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Teacher/GetQuizes',{
                 method:'POST',
                 body:JSON.stringify({
                     courseID:param.courseID,
@@ -101,7 +102,7 @@ function Course() {
             dispatch(authActions.setLoading());
         }
         Call();
-    },[])
+    },[dispatch,param.courseID,param.dept,param.teacher])
 
     let data1 = 'No Material Added';
     let data2 = 'No Assignmets Added';

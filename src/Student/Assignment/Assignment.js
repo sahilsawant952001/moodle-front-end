@@ -27,14 +27,17 @@ function Assignment() {
 
     const dispatch = useDispatch();
 
+    const param = useParams();
+
+    const history = useHistory();
+
     useEffect(() => {
         if(fileUrl!==""){
-            fetch('http://localhost:4000/Student/AddSubmission',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Student/AddSubmission',{
                 method:'POST',
                 body:JSON.stringify({
                     name:name,
                     fileUrl:fileUrl,
-                    submissionDate:newdate,
                     assignmentID:param.assignmentID,
                     teacherID:param.teacher,
                     studentID:studentID,
@@ -65,12 +68,12 @@ function Assignment() {
             setfileUrl("");
         } 
  
-     },[fileUrl])
+     },[fileUrl,dispatch,history,maxMarks,param.assignmentID,param.teacher,studentID,name,param.CourseID])
 
     useEffect(()=>{
-        async function Call(){
+        async function Call(){        
             dispatch(authActions.setLoading());
-            fetch('http://localhost:4000/GetSubmissionStatus',{
+            fetch('https://blooming-earth-19953.herokuapp.com/GetSubmissionStatus',{
                 method:'POST',
                 body:JSON.stringify({
                     studentID:studentID,
@@ -100,8 +103,10 @@ function Assignment() {
                 alert('ERROR OCCURED WHILE FETCHING DATA');
             })
         }
-        Call();
-    },[])
+        if(submitedData===null){
+            Call();
+        }
+    },[dispatch,isSubmited,teacherID,studentID,param.assignmentID,submitedData])
 
     function fileHandler(event){
         if(event.target.files[0]){
@@ -113,13 +118,7 @@ function Assignment() {
         setname(event.target.value);
     }
 
-    const param = useParams();
-
-    const marks = 0;
-
-    const history = useHistory();
-
-    const newdate = new Date();
+    
 
     async function formSubmitHandler(event){
         event.preventDefault();
@@ -151,7 +150,7 @@ function Assignment() {
         const uploadTask = storage.refFromURL(submitedData.data[0].fileUrl);
         uploadTask.delete()
         .then(() => {
-            fetch('http://localhost:4000/Student/DeleteSubmission',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Student/DeleteSubmission',{
                 method:'POST',
                 body:JSON.stringify({
                     studentID:studentID,
@@ -228,13 +227,13 @@ function Assignment() {
         <div className='card-body'>
             <h1>{filename}</h1>
             <h1><button onClick={viewAssignmentHandler} className='btn btn-secondary btn-lg'>View Assignment</button></h1>
-            {submitedData===null ?<h4>Submit Your Work</h4>:<h3>You have submitted Assignment on {x.toDateString()} <h1><button className='btn btn-secondary' onClick={viewHandler}>VIEW SUBMISSION</button></h1> </h3>}
+            {submitedData===null ?<h4>Submit Your Work</h4>:<h3>You have submitted Assignment on {x.toDateString()} <button style={{display:'block',margin:'5% auto'}} className='btn btn-secondary' onClick={viewHandler}>VIEW SUBMISSION</button> </h3>}
             {(submitedData!==null && x>y) && <h3>Assignment Submitted Late</h3>}
             {(submitedData!==null && x<=y) && <h3>Assignment Submitted On Time</h3>}
             {isSubmited===true && submitedData!==null && submitedData.data[0].marks!=='NG' ? marskInfo:null}
         </div>
     </div>
-    {submitedData!==null && submitedData.data[0].marks === "NG" ? <div className="card" style={{width:"30%",margin:"5% auto",padding:"5%"}}>
+    {submitedData!==null && submitedData.data[0].marks === "NG" ? <div className="card" style={{width:"50%",margin:"5% auto",padding:"5%"}}>
         <form onSubmit={isSubmited===true ? updateHandler : formSubmitHandler}>
             {!isSubmited && <div>
                 <div className="form-group">
@@ -245,7 +244,7 @@ function Assignment() {
                 </div>
             </div>}
             <div className="form-group">
-                <button className="btn btn-dark btn-block">{isSubmited?"DELETE SUBMISSION":"Submit"}</button>
+                <button className="btn btn-secondary btn-block">{isSubmited?"DELETE SUBMISSION":"Submit"}</button>
             </div>   
         </form>
     </div>:submitedData===null ? 

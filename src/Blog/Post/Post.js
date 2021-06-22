@@ -12,7 +12,7 @@ function Post() {
                     <h3 className='card-title' style={{margin:"4% auto"}}>{location.state.title}</h3>
                     <img src={location.state.image} height='50%' width='50%' alt='post'/>
                     <h6 style={{margin:'5% 2%'}}>{location.state.content}</h6>  
-                    <p className="card-text"><small className="text-muted">{location.state.authorType} : {location.state.authorID}</small></p>
+                    <p className="card-text"><small className="text-muted">Author : {location.state.authorID} ({location.state.authorType}) </small></p>
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router'
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import { authActions } from '../../Store/Auth';
 import classes from '../Enrolled/Enrolled.module.css';
@@ -19,8 +19,9 @@ function Enrolled() {
 
     useEffect(() => {
         async function Call(){
+            
             dispatch(authActions.setLoading());
-            fetch('http://localhost:4000/Teacher/Enrolled',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Teacher/Enrolled',{
                 method:'POST',
                 body:JSON.stringify({
                     teacherID:param.teacher,
@@ -46,11 +47,9 @@ function Enrolled() {
             })
         }
         Call();
-    },[])
+    },[dispatch,param.courseID,param.dept,param.teacher])
 
     const location = useLocation();
-
-    const history = useHistory();
 
     const data = enrolled.map( item => {
         const url = '/Teacher/'+param.dept+'/'+param.teacher+'/Course/'+param.courseID+'/Enrolled/'+item.studentID;

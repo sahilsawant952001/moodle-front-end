@@ -27,7 +27,8 @@ function AllCourses() {
   
     useEffect(() => {
         async function Call(){
-            fetch('http://localhost:4000/AllCourses',{
+            dispatch(authActions.setLoading());
+            fetch('https://blooming-earth-19953.herokuapp.com/AllCourses',{
                 method:'POST',
                 body:JSON.stringify({
                     teacherID:teacherID
@@ -54,15 +55,14 @@ function AllCourses() {
                 history.goBack();
             })
         }
-        dispatch(authActions.setLoading());
         Call();
-    },[])
+    },[dispatch,history,teacherID])
 
     let cdata = null;
 
     async function checkEnrollStatus(enrollkey,courseid,teacherid,urlToCourse,courseName){
         dispatch(authActions.setLoading());
-        fetch('http://localhost:4000/Student/EnrollStatus',{
+        fetch('https://blooming-earth-19953.herokuapp.com/Student/EnrollStatus',{
             method:'POST',
             body:JSON.stringify({
                 studentID:studentID,
@@ -92,7 +92,7 @@ function AllCourses() {
                 const x = window.prompt('YOU ARE NOT ENROLLED IN THIS COURSE ENTER ENROLLMENT KEY : ');
                 if(x === enrollkey){
                     dispatch(authActions.setLoading());
-                    fetch('http://localhost:4000/Student/Enroll',{
+                    fetch('https://blooming-earth-19953.herokuapp.com/Student/Enroll',{
                         method:'POST',
                         body:JSON.stringify({
                             courseID:courseid,

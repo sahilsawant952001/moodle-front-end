@@ -33,7 +33,7 @@ function StudentReport() {
     useEffect(() => {
         async function Call(){
             dispatch(authActions.setLoading());
-            fetch('http://localhost:4000/Teacher/GetStudentInfo',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Teacher/GetStudentInfo',{
                 method:'POST',
                 body:JSON.stringify({
                     studentID:studentID
@@ -50,7 +50,7 @@ function StudentReport() {
             })
             .catch(err => alert('SOMETHING WENT WRONG'));
 
-            fetch('http://localhost:4000/Teacher/QuizStats',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Teacher/QuizStats',{
                 method:'POST',
                 body:JSON.stringify({
                     studentID:studentID,
@@ -72,7 +72,7 @@ function StudentReport() {
             })
             .catch(err => alert('SOMETHING WENT WRONG'))
 
-            fetch('http://localhost:4000/Teacher/assignmentStats',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Teacher/assignmentStats',{
                 method:'POST',
                 body:JSON.stringify({
                     studentID:studentID,
@@ -96,11 +96,11 @@ function StudentReport() {
             dispatch(authActions.setLoading());
         }
         Call();
-    },[])
+    },[dispatch,param.courseID,param.teacher,param.dept,studentID])
 
     async function unEnrollStudent(studentID){
         dispatch(authActions.setLoading());
-        fetch('http://localhost:4000/Teacher/UnEnrollStudent',{
+        fetch('https://blooming-earth-19953.herokuapp.com/Teacher/UnEnrollStudent',{
             method:'POST',
             body:JSON.stringify({
                 studentID:studentID,

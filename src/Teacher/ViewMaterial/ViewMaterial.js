@@ -23,7 +23,7 @@ function ViewAssignmentT() {
         const uploadTask = storage.refFromURL(location.state.fileurl);
         uploadTask.delete()
         .then(() => {
-            fetch('http://localhost:4000/Teacher/Delete/Material',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Teacher/Delete/Material',{
                 method:'POST',
                 body:JSON.stringify({
                     name:location.state.filename,

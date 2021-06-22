@@ -22,7 +22,7 @@ function RemoveTeacher() {
     async function formSubmitHandler(event){
         event.preventDefault();
         dispatch(authActions.setLoading());
-        let url = 'http://localhost:4000/Admin/RemoveTeacher';
+        let url = 'https://blooming-earth-19953.herokuapp.com/Admin/RemoveTeacher';
         let body = {
             email:id,
         }

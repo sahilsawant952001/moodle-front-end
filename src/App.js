@@ -99,7 +99,7 @@ function App() {
                     <Route path='/Teacher/:dept/:teacher/Course/:courseID/Material/:materialID' component={ViewMaterial} exact/>
                     <Route path='/Blog' component={Posts} exact/>
                     <Route path='/Blog/Posts/:postID' component={Post} exact/>
-                    <Route path='/Blog/Posts/CreatePost' component={CreatePost} />
+                    <Route path='/Blog/CreatePost' component={CreatePost} />
                     <Route path='/Blog/MyPosts' component={MyPosts} />
                     <Redirect to='/NotFound'/>
               </Switch>

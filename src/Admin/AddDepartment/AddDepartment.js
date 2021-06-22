@@ -27,7 +27,7 @@ function AddDepartment() {
     async function formSubmitHandler(event){
         event.preventDefault();
         dispatch(authActions.setLoading());
-        const url = 'http://localhost:4000/Admin/AddDepartment'
+        const url = 'https://blooming-earth-19953.herokuapp.com/Admin/AddDepartment'
         fetch(url,{
             method:'POST',
             mode:'cors',

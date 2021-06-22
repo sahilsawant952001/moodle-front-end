@@ -52,7 +52,7 @@ function AddTeacher() {
     async function formSubmitHandler(event){
         event.preventDefault();
         dispatch(authActions.setLoading());
-        let url = 'http://localhost:4000/Teacher/SignUp';
+        let url = 'https://blooming-earth-19953.herokuapp.com/Teacher/SignUp';
         let body = {
             email:email,
             teacherID:id,

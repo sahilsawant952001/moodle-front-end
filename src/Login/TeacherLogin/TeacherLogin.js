@@ -27,8 +27,6 @@ function TeacherLogin() {
 
     const [id, setid] = useState("");
 
-    const [confpassword, setconfpassword] = useState("");
-
     const [dept, setdept] = useState("");
 
     function deptHandler(event){
@@ -55,16 +53,13 @@ function TeacherLogin() {
         setid(event.target.value);
     }
 
-    function confpasswordHandler(event){
-        setconfpassword(event.target.value);
-    }
-
     async function formSubmitHandler(event){
         event.preventDefault();
-        dispatch(authActions.setLoading());
-        let url = 'http://localhost:4000/Teacher/';
-        let authBody = null;
         
+        dispatch(authActions.setLoading());
+        let url = 'https://blooming-earth-19953.herokuapp.com/Teacher/';
+        let authBody = null;
+            
         if(isSignIn){
             url = url + 'SignIn';
             authBody = {
@@ -88,7 +83,7 @@ function TeacherLogin() {
             mode:'cors',
             body:JSON.stringify(authBody),
             headers:{
-              'Content-Type': 'application/json'
+            'Content-Type': 'application/json'
             }
         }).then( res => {
             return res.json();
@@ -110,9 +105,10 @@ function TeacherLogin() {
                 seterror(data.message);
             }
         }).catch((err) => {
-             dispatch(authActions.setLoading());
-             alert('Some Error Occured');
+            dispatch(authActions.setLoading());
+            alert('Some Error Occured');
         });
+        
     }
 
     return (
@@ -129,7 +125,7 @@ function TeacherLogin() {
                         <input value={surname} onChange={surnameHandler} required type="text" className="form-control" id="formGroupExampleInput2" placeholder="Enter Surname"/>
                     </div>:null}
                     <div className="form-group">
-                        <input value={email} onChange={emailHandler} required type="text" className="form-control" id="formGroupExampleInput3" placeholder="Enter Email"/>
+                        <input value={email} onChange={emailHandler} required type="email" className="form-control" id="formGroupExampleInput3" placeholder="Enter Email"/>
                     </div>
                     {!isSignIn? <div className="form-group">
                         <input value={id} required onChange={idHandler} type="text" className="form-control" id="formGroupExampleInput4" placeholder="Enter Teacher ID"/>
@@ -142,11 +138,8 @@ function TeacherLogin() {
                     <option value="ETRX">Electronics Engineering</option>
                     </select></div>:null}
                     <div className="form-group">
-                        <input value={password} onChange={passwordHandler} required type="text" className="form-control" id="formGroupExampleInput5" placeholder="Enter Password"/>
+                        <input value={password} onChange={passwordHandler} required type="password" className="form-control" id="formGroupExampleInput5" placeholder="Enter Password"/>
                     </div>
-                    {!isSignIn?<div className="form-group">
-                        <input value={confpassword} onChange={confpasswordHandler} required type="text" className="form-control" id="formGroupExampleInput6" placeholder="Confirm Password"/>
-                    </div>:null}
                     <div className="form-group">
                         <button id={classes.submitbtn}  className="btn btn-dark btn-block">{!isSignIn?"SIGN UP":"SIGN IN"}</button>
                     </div>

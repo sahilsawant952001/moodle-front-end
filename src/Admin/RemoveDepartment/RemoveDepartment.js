@@ -23,7 +23,7 @@ function RemoveDepartment() {
         
         event.preventDefault();
         dispatch(authActions.setLoading());
-        const url = 'http://localhost:4000/Admin/RemoveDepartment'
+        const url = 'https://blooming-earth-19953.herokuapp.com/Admin/RemoveDepartment'
         fetch(url,{
             method:'POST',
             mode:'cors',

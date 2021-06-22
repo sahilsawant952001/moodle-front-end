@@ -102,7 +102,7 @@ function AddQuiz() {
     function formSubmitHandler(event){
         event.preventDefault();
         dispatch(authActions.setLoading());
-        fetch('http://localhost:4000/Teacher/AddQuiz',{
+        fetch('https://blooming-earth-19953.herokuapp.com/Teacher/AddQuiz',{
             method:'POST',
             body:JSON.stringify({
                 quizID:id,

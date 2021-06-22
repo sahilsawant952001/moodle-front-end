@@ -55,6 +55,10 @@ function QuizStart() {
 
     const loading = useSelector(state => state.auth.loading);
 
+    const param = useParams();
+
+    const studentID = useSelector(state => state.auth.id);
+
     const style1 = {
         
     }
@@ -64,19 +68,20 @@ function QuizStart() {
         color:'white'
     }
 
-    useEffect(() => {
+    useEffect(() => {  
         dispatch(authActions.setQuiz());
         setinFullScreen(true);
         openFullscreen();
-    },[])
+    },[dispatch])
 
     useEffect(() => {
         if(count===1 && forcedExit===true && !normalExit){
             let answers = Answers;
             answers.pop();
+            
             setinFullScreen(false);
             dispatch(authActions.setLoading());
-            fetch('http://localhost:4000/Student/Attempt',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Student/Attempt',{
                 method:'POST',
                 body:JSON.stringify({
                     studentID:studentID,
@@ -105,11 +110,9 @@ function QuizStart() {
                 alert('SOMETHING WENT WRONG');
             })
         }
-    },[count])
 
-    const param = useParams();
+    },[quizInfo.maxMarks,count,Answers,dispatch,forcedExit,normalExit,studentID,param.CourseID,param.dept,param.quizID,param.teacher])
 
-    const studentID = useSelector(state => state.auth.id);
 
     function Finish(){
         setnormalExit(true);
@@ -118,7 +121,7 @@ function QuizStart() {
         let answers = Answers;
         answers.pop();
         dispatch(authActions.setLoading());
-        fetch('http://localhost:4000/Student/Attempt',{
+        fetch('https://blooming-earth-19953.herokuapp.com/Student/Attempt',{
             method:'POST',
             body:JSON.stringify({
                 studentID:studentID,
@@ -183,12 +186,14 @@ function QuizStart() {
 
     useEffect(() => {
         if(Answers[QIndex]==='-1'){
+            
             var ele = document.getElementsByName("QuizQuestion");
             for(var i=0;i<ele.length;i++)
                 ele[i].checked = false;
         }else{
-            var ele = document.getElementsByName("QuizQuestion");
-            for(var i=0;i<ele.length;i++)
+            
+            ele = document.getElementsByName("QuizQuestion");
+            for(i=0;i<ele.length;i++)
             {
                 if(QIndex===i){
                     ele[i].checked = true;
@@ -197,7 +202,7 @@ function QuizStart() {
                 }
             }
         }
-    },[QIndex])
+    },[QIndex,Answers])
 
     function nextQuestion(){
         if(QIndex<Answers.length-1){

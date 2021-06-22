@@ -20,7 +20,7 @@ function AddAssignment() {
 
     const [fileurl, setfileurl] = useState("");
     
-    const [submissionDate, setsubmissionDate] = useState(null);
+    const [submissionDate, setsubmissionDate] = useState("");
 
     const [file, setfile] = useState(null);
 
@@ -32,7 +32,8 @@ function AddAssignment() {
 
     useEffect(() => {
        if(fileurl!==""){
-            fetch('http://localhost:4000/AddAssignment',{
+            
+            fetch('https://blooming-earth-19953.herokuapp.com/AddAssignment',{
                 method:'POST',
                 body:JSON.stringify({
                     id:id,
@@ -66,7 +67,7 @@ function AddAssignment() {
             setfileurl("");
        } 
 
-    },[fileurl])
+    },[fileurl,dispatch,history,id,name,marks,param.courseID,param.teacher,submissionDate])
 
     function marksHandler(event){
         setmarks(event.target.value);

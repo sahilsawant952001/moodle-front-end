@@ -20,7 +20,7 @@ function StudentHome() {
     useEffect(() => {
         async function Call(){
             dispatch(authActions.setLoading());
-            const url = 'http://localhost:4000/GetTeachers';
+            const url = 'https://blooming-earth-19953.herokuapp.com/GetTeachers';
             fetch(url,{
                 method:'POST',
                 body:JSON.stringify({
@@ -42,9 +42,8 @@ function StudentHome() {
                 alert('SOME ERROR OCCURED!')
             })
         }
-
         Call();
-    },[])
+    },[dept,dispatch])
 
     let data = null;
 

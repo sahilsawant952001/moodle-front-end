@@ -26,7 +26,7 @@ function AllSubmissions() {
     useEffect( () => {
         async function Call(){
             dispatch(authActions.setLoading());
-            fetch('http://localhost:4000/Teacher/GetSubmissions',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Teacher/GetSubmissions',{
                 method:'POST',
                 body:JSON.stringify({
                     teacherID:param.teacher,
@@ -53,7 +53,7 @@ function AllSubmissions() {
             })
         }
         Call();
-    },[])
+    },[dispatch,param.assignmentID,param.teacher])
 
     let data = 'No Submissions';
 
@@ -77,7 +77,6 @@ function AllSubmissions() {
     let viewUrl = '/Teacher/'+param.dept+'/'+param.teacher+'/Course/'+param.courseID+'/Assignments/'+param.assignmentID+'/ViewAssignment';
 
     function ViewAssignmentHandler(){
-        viewUrl = viewUrl;
         history.push({
             pathname:viewUrl,
             state:{
@@ -92,7 +91,7 @@ function AllSubmissions() {
         const uploadTask = storage.refFromURL(fileUrl);
         uploadTask.delete()
         .then(() => {
-            fetch('http://localhost:4000/Teacher/Delete/Assignment',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Teacher/Delete/Assignment',{
                 method:'POST',
                 body:JSON.stringify({
                     teacherID:param.teacher,

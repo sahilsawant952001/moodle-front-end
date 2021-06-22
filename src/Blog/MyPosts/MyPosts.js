@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useHistory, useLocation } from 'react-router-dom/cjs/react-router-dom.min';
@@ -21,12 +21,10 @@ function MyPosts() {
     const loading = useSelector(state => state.auth.loading);
 
     const dispatch = useDispatch();
-    
-    const [count, setcount] = useState(0);
-
+   
     async function postDeleteHandler(postID){
         dispatch(authActions.setLoading());
-        fetch('http://localhost:4000/Blog/DeletePost',{
+        fetch('https://blooming-earth-19953.herokuapp.com/Blog/DeletePost',{
             method:'POST',
             body:JSON.stringify({
                 postID:postID
@@ -54,7 +52,7 @@ function MyPosts() {
     if(posts!==null){
         data = posts.map(post => {
             if(post.authorID===userID){
-                setcount(count+1);
+        
                 const url = '/Blog/Posts/'+post._id;
                 return  <div key={post._id} className="card" style={{width:"20rem",margin:"3%",padding:"3%",display:'inline-block'}}>
                             <h4 style={{margin:'10% auto'}} className='car-header'>{post.title}</h4>
@@ -83,7 +81,6 @@ function MyPosts() {
     return (
         loading ? <Spinner/> : <div className={classes.MyPosts}>
             <h1>MY POSTS</h1>
-            {count===0 && <p>NO POSTS FOUND</p>}
             {data}
     </div>
     )

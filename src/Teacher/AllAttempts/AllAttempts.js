@@ -25,9 +25,9 @@ function AllAttempts() {
     const history = useHistory();
 
     useEffect(() => {
-        async function Call(){
+        async function Call(){ 
             dispatch(authActions.setLoading());
-            fetch('http://localhost:4000/Teacher/AllAttempts',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Teacher/AllAttempts',{
                 method:'POST',
                 body:JSON.stringify({
                     teacherID:param.teacher,
@@ -56,7 +56,7 @@ function AllAttempts() {
             })
         }
         Call();
-    },[])
+    },[dispatch,history,param.courseID,param.dept,param.quizID,param.teacher])
 
     if(quizInfo!==null && attemptInfo.length!==0){
         data = attemptInfo.map( item => {
@@ -73,7 +73,7 @@ function AllAttempts() {
 
     async function deleteQuiz(){
         dispatch(authActions.setLoading());
-        fetch('http://localhost:4000/Teacher/DeleteQuiz',{
+        fetch('https://blooming-earth-19953.herokuapp.com/Teacher/DeleteQuiz',{
             method:'POST',
             body:JSON.stringify({
                 courseID:param.courseID,

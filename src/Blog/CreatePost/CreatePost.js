@@ -26,7 +26,7 @@ function CreatePost() {
 
     useEffect(() => {
         if(ImgUrl!==""){
-                fetch('http://localhost:4000/Blog/CreatePost',{
+                fetch('https://blooming-earth-19953.herokuapp.com/Blog/CreatePost',{
                 method:'POST',
                 body:JSON.stringify({
                     title:title,
@@ -54,7 +54,8 @@ function CreatePost() {
                 alert('SOMETHING WENT WRONG');
             })
         }
-    },[ImgUrl])
+
+    },[ImgUrl,title,content,auth.id,auth.userType,dispatch,history])
 
     function contentHandler(event){
         setcontent(event.target.value);

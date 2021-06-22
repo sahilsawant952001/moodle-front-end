@@ -30,7 +30,7 @@ function Quiz() {
         if(original===mypass){
             dispatch(authActions.setLoading());
             const url = '/Student/'+ param.dept +'/'+ param.teacher +'/Course/'+ param.CourseID +'/Quiz/'+quizInfo.quizID;
-            fetch('http://localhost:4000/Student/CheckAttempt',{
+            fetch('https://blooming-earth-19953.herokuapp.com/Student/CheckAttempt',{
                 method:'POST',
                 body:JSON.stringify({
                     studentID:studentID,
@@ -118,7 +118,7 @@ function Quiz() {
             <div>
                 <div>
                     <p style={{textAlign:'center',margin:'5% auto'}}>QUIZ NOT CURRENTLY AVAILABLE</p>
-                    <p>THIS QUIZ WILL BE AVAILABLE BETWEEN</p><br/>
+                    <p>THIS QUIZ IS AVAILABLE BETWEEN</p><br/>
                     <p>Date : {quizstart.toLocaleDateString()} Time : {quizstart.toLocaleTimeString()}</p>
                     <p>To</p>
                     <p>Date : {quizEnd.toLocaleDateString()} Time : {quizEnd.toLocaleTimeString()}</p>

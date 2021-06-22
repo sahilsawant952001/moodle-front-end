@@ -37,7 +37,7 @@ function Submission() {
     async function formSubmitHandler(event){
         event.preventDefault();
         dispatch(authActions.setLoading());
-        const url = 'http://localhost:4000/Teacher/Evaluate';
+        const url = 'https://blooming-earth-19953.herokuapp.com/Teacher/Evaluate';
         fetch(url,{
             method:'POST',
             body:JSON.stringify({

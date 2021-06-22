@@ -14,21 +14,21 @@ function Posts() {
 
     useEffect(() => {
         dispatch(authActions.setLoading());
-        fetch('http://localhost:4000/Blog/GetPosts')
+        fetch('https://blooming-earth-19953.herokuapp.com/Blog/GetPosts')
         .then(res => res.json())
         .then(data => {
             dispatch(authActions.setLoading());
             if(data.success){
                 setposts(data.posts);
             }else{
-                alert(data.message);
+                
             }
         })
         .catch(err => {
             dispatch(authActions.setLoading());
             alert('SOMETHING WENT WRONG')
         })
-    },[])
+    },[dispatch])
 
     let data = null;
     

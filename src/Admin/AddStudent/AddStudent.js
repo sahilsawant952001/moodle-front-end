@@ -52,7 +52,7 @@ function AddStudent() {
     async function formSubmitHandler(event){
         event.preventDefault();
         dispatch(authActions.setLoading());
-        let url = 'http://localhost:4000/Student/SignUp';
+        let url = 'https://blooming-earth-19953.herokuapp.com/Student/SignUp';
         let body = {
             email:email,
             studentID:id,
